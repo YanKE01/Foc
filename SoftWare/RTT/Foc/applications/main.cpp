@@ -14,6 +14,8 @@
 int main(void)
 {
     HalInit();
+	
+	111
     TaskInit();
     return RT_EOK;
 }
