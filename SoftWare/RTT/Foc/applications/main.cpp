@@ -9,11 +9,11 @@
  */
 
 #include <rtthread.h>
-#include "tim.h"
-
+#include "hal.h"
+#include "task.h"
 int main(void)
 {
-    MX_TIM1_Init();
-
+    HalInit();
+    TaskInit();
     return RT_EOK;
 }

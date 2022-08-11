@@ -7,16 +7,13 @@
  * Date           Author       Notes
  * 2022-08-11     SkyLin       the first version
  */
-#ifndef HAL_INCLUDE_HAL_H_
-#define HAL_INCLUDE_HAL_H_
+#ifndef APPLICATIONS_INCLUDE_TASK_H_
+#define APPLICATIONS_INCLUDE_TASK_H_
 
-#include "tim.h"
-#include <board.h>
 #include <rtthread.h>
-#include <rtdevice.h>
+#include "hal.h"
 
-#define ledFlash GET_PIN(A,1)
 
-void HalInit();
+void TaskInit(void);
 
-#endif /* HAL_INCLUDE_HAL_H_ */
+#endif /* APPLICATIONS_INCLUDE_TASK_H_ */
