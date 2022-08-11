@@ -11,9 +11,11 @@
 #include <rtthread.h>
 #include "hal.h"
 #include "task.h"
+#include "encoder.h"
 int main(void)
 {
     HalInit();
     TaskInit();
+
     return RT_EOK;
 }
