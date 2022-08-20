@@ -14,9 +14,12 @@
 #include <board.h>
 #include <rtthread.h>
 #include <rtdevice.h>
+#include "serial.h"
+
 
 #define ledFlash GET_PIN(A,1)
-
+#define userButton GET_PIN(C,13)
+#define drvEn GET_PIN(B,12)
 void HalInit();
 
 #endif /* HAL_INCLUDE_HAL_H_ */

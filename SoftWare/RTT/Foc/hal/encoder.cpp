@@ -9,6 +9,12 @@
  */
 #include <encoder.h>
 
+#define _2PI 6.28318530718
+
+Encoder::Encoder()
+{
+
+}
 
 /**
  * @brief  编码器构造函数
@@ -23,6 +29,7 @@ Encoder::Encoder(std::string name)
     {
         rt_kprintf("I2C1 Register Success\r\n");
     }
+
 }
 
 /**
@@ -96,6 +103,34 @@ float Encoder::GetAngle()
     anglePrev = angle;
 
     return -(fullRotation + (angle / (float) AS5600_RESOLUTION) * _2PI);
+}
+
+/**
+ * @brief  低通滤波
+ * @param  当前数据
+ * @return 滤波后数据
+ */
+float Encoder::Lpf(float x)
+{
+    float y = 0.9f*speedPrev + 0.1f*x;
+
+    speedPrev=y;
+
+    return y;
+}
+
+/**
+ * @brief  获取转速
+ * @param  angleNow:当前角度 Ts:周期
+ * @return 转角
+ */
+float Encoder::GetSpeed(float angleNow,float Ts)
+{
+    speed=(angleNow-speedAnglePrev)/Ts;
+    speed=Lpf(speed);//滤波
+    speedAnglePrev=angleNow;
+
+    return speed;
 }
 
 Encoder::~Encoder()

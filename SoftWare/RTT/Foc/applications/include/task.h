@@ -12,7 +12,10 @@
 
 #include <rtthread.h>
 #include "hal.h"
-
+#include "foc.h"
+#include "encoder.h"
+#include "pid.h"
+#include "serial.h"
 
 void TaskInit(void);
 

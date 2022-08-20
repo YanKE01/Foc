@@ -219,6 +219,12 @@
 /* entertainment: terminal games and other interesting software packages */
 
 /* end of entertainment: terminal games and other interesting software packages */
+#define PKG_USING_MULTIBUTTON
+#define PKG_USING_MULTIBUTTON_V110
+
+/* MultiButton Options */
+
+/* end of MultiButton Options */
 /* end of miscellaneous packages */
 /* end of RT-Thread online packages */
 

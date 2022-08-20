@@ -19,5 +19,8 @@
 void HalInit()
 {
     rt_pin_mode(ledFlash,PIN_MODE_OUTPUT);//led初始化
+    rt_pin_mode(userButton, PIN_MODE_INPUT_PULLUP);//用户按键初始化
+    rt_pin_mode(drvEn, PIN_MODE_OUTPUT);//驱动使能引脚
+    SerialInit();
     MX_TIM1_Init();
 }
