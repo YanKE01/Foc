@@ -11,8 +11,12 @@
 #include <rtthread.h>
 #include <board.h>
 #include <rtdevice.h>
+#include "include/task.h"
+#include "tim.h"
 
 int main(void)
 {
+    MX_TIM1_Init();
+    TaskStartUp();
     return RT_EOK;
 }
