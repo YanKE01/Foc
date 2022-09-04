@@ -13,13 +13,21 @@
 #include "hall_sensor.h"
 #include "hal/include/lcd.h"
 #include "foc.h"
+#include "pid.h"
 
-extern "C"{
-    #include <rtdevice.h>
-    #include <board.h>
-    #include <rtthread.h>
-    #include "stdio.h"
+extern "C"
+{
+#include <rtdevice.h>
+#include <board.h>
+#include <rtthread.h>
+#include "stdio.h"
+#include "multi_button.h"
 }
+
+
+#define buttonRight GET_PIN(C,12)
+#define buttonLeft GET_PIN(C,11)
+
 void TaskStartUp();
 
 #endif /* APPLICATIONS_INCLUDE_TASK_H_ */

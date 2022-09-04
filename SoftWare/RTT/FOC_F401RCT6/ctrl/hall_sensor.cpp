@@ -9,6 +9,31 @@
  */
 #include "hall_sensor.h"
 
+
+__STATIC_INLINE uint32_t GXT_SYSTICK_IsActiveCounterFlag(void)
+{
+  return ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) == (SysTick_CTRL_COUNTFLAG_Msk));
+}
+
+static uint32_t getCurrentMicros(void)
+{
+  /* Ensure COUNTFLAG is reset by reading SysTick control and status register */
+  GXT_SYSTICK_IsActiveCounterFlag();
+  uint32_t m = HAL_GetTick();
+  const uint32_t tms = SysTick->LOAD + 1;
+  __IO uint32_t u = tms - SysTick->VAL;
+  if (GXT_SYSTICK_IsActiveCounterFlag()) {
+    m = HAL_GetTick();
+    u = tms - SysTick->VAL;
+  }
+  return (m * 1000 + (u * 1000) / tms);
+}
+//获取系统时间，单位us
+uint32_t micros(void)
+{
+  return getCurrentMicros();
+}
+
 /**
  * Hall构造
  * @param hall_u
@@ -31,11 +56,12 @@ HallSensor::HallSensor(rt_base_t hall_u, rt_base_t hall_v, rt_base_t hall_w, int
     velocity = 0.0f;
 
     //初始化时先读取一起状态
-    uState=rt_pin_read(hall_u);
-    vState=rt_pin_read(hall_v);
-    wState=rt_pin_read(hall_w);
+    uState = rt_pin_read(hall_u);
+    vState = rt_pin_read(hall_v);
+    wState = rt_pin_read(hall_w);
 
     UpdateHall();
+    pulse_timestamp = micros();
 }
 
 /**
@@ -43,7 +69,8 @@ HallSensor::HallSensor(rt_base_t hall_u, rt_base_t hall_v, rt_base_t hall_w, int
  */
 void HallSensor::UpdateHall()
 {
-    //int8_t newHallState = rt_pin_read(hall_w) + (rt_pin_read(hall_v) << 1) + (rt_pin_read(hall_u) << 2);
+    long new_pulse_timestamp = micros();
+
     int8_t newHallState = wState + (vState << 1) + (uState << 2);
     if (newHallState == hallState)
     {
@@ -70,6 +97,20 @@ void HallSensor::UpdateHall()
     }
 
     electricSector = newElectricSector; //更新扇区
+
+    if (direction == old_direction)
+    {
+        //方向保持一致
+        pulse_diff = new_pulse_timestamp - pulse_timestamp;
+    }
+    else
+    {
+        pulse_diff = 0;
+    }
+
+    pulse_timestamp = new_pulse_timestamp;
+    old_direction = direction;
+
 }
 
 float HallSensor::GetAngle()
@@ -85,14 +126,24 @@ void HallSensor::GetDirection()
 
 float HallSensor::GetSpeed()
 {
-    return velocity;
+    if (pulse_diff == 0 || ((long) (micros() - pulse_timestamp) > pulse_diff))
+    {
+        return 0;
+    }
+    else
+    {
+        return direction * (_2PI / (float) cpr) / (pulse_diff / 1000000.0f); //TS=1us
+    }
+
 }
 
-void HallSensor::ClacSpeed(float ts)
+float HallSensor::GetSpeedLpf()
 {
-    angleCurrent = GetAngle();
-    velocity = (angleCurrent - anglePrev) / ts;
-    anglePrev = angleCurrent;
+    float velocity = GetSpeed();
+    float y = 0.9f * velocity_prev + 0.1f * velocity;
+    velocity_prev = velocity_prev;
+
+    return y;
 }
 
 /**
@@ -100,19 +151,19 @@ void HallSensor::ClacSpeed(float ts)
  */
 void HallSensor::UpdateU()
 {
-    uState=rt_pin_read(hall_u);
+    uState = rt_pin_read(hall_u);
     UpdateHall();
 }
 
 void HallSensor::UpdateV()
 {
-    vState=rt_pin_read(hall_v);
+    vState = rt_pin_read(hall_v);
     UpdateHall();
 }
 
 void HallSensor::UpdateW()
 {
-    wState=rt_pin_read(hall_w);
+    wState = rt_pin_read(hall_w);
     UpdateHall();
 }
 
@@ -125,7 +176,6 @@ rt_base_t HallSensor::GetVPin()
 {
     return hall_v;
 }
-
 
 rt_base_t HallSensor::GetWPin()
 {

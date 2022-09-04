@@ -40,7 +40,7 @@ public:
     void GetDirection();
     float GetAngle();
     float GetSpeed();//获取转速
-    void ClacSpeed(float ts);//计算转算
+    float GetSpeedLpf();//获取转速-低通
     void UpdateU();
     void UpdateV();
     void UpdateW();
@@ -57,8 +57,12 @@ private:
     Direction direction;//转向
     volatile long electricRotations;//转动次数
     float velocity;
+    float velocity_prev;
     float angleCurrent,anglePrev;
     int uState,vState,wState;//u,v,w状态
+    volatile long pulse_diff;
+    volatile unsigned long pulse_timestamp;
+
 };
 
 
