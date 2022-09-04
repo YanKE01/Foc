@@ -1,5 +1,10 @@
 [
  {
+  "path": "/packages/language/JSON/cJSON", 
+  "ver": "latest", 
+  "name": "CJSON"
+ }, 
+ {
   "path": "/packages/system/enhanced-kservice/rt_vsnprintf_full", 
   "ver": "latest", 
   "name": "RT_VSNPRINTF_FULL"
