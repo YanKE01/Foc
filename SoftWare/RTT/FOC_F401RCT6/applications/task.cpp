@@ -207,7 +207,7 @@ void FocOperate_Entry(void *pvParameter)
     while (1)
     {
         angle = hall.GetAngle();
-        angleEl = angle * 2.0f;
+        angleEl = angle * 2.0f; //极对数为2
 
         if (controlMode == 0)
         {

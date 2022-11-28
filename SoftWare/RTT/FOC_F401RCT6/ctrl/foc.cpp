@@ -68,10 +68,10 @@ void Foc::Svpwm(float uq, float ud, float angleEl)
     {
         uref = 0.577f;
     }
-    if (uref < -0.577f)
-    {
-        uref = -0.577f;
-    }
+//    if (uref < -0.577f)
+//    {
+//        uref = -0.577f;
+//    }
 
     // 3-计算所在扇区
     sector = (angleEl / _PI_3) + 1;
