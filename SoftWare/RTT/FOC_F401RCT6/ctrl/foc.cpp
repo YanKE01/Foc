@@ -68,15 +68,12 @@ void Foc::Svpwm(float uq, float ud, float angleEl)
     {
         uref = 0.577f;
     }
-//    if (uref < -0.577f)
-//    {
-//        uref = -0.577f;
-//    }
+
 
     // 3-计算所在扇区
     sector = (angleEl / _PI_3) + 1;
 
-    // 4-计算相邻矢量的作用时间，此处参考simplefoc
+    // 4-计算相邻矢量的作用时间
     t1 = _SQRT3 * arm_sin_f32(sector * _PI_3 - angleEl) * uref;
     t2 = _SQRT3 * arm_sin_f32(angleEl - (sector - 1.0) * _PI_3) * uref;
     t0 = 1 - t1 - t2;

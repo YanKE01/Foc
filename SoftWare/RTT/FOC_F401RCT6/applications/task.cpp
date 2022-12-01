@@ -88,7 +88,7 @@ void ButtonRightCb(void *btn)
         }
         else if (controlMode == 1)
         {
-            targetAngle += 0.523f; //位置减少30°
+            targetAngle += 0.523f; //位置增加30°
         }
         break;
     case DOUBLE_CLICK:
